@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "nombre": "Joaquín Lechessi",
+    "direccion": "Los Álamos",
+    "telefono": 381678964
+  },
+  {
+    "id": 2,
+    "nombre": "Lautaro Añazgo",
+    "direccion": "25 de Mayo",
+    "telefono": 381542678
+  }
+]
