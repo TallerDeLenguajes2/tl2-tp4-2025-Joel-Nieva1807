@@ -11,31 +11,38 @@ namespace TP4.Controllers;
 [Route("[controller]")]
 public class CadeteriaController : ControllerBase
 {
-    IAccesoADatos datosCarga = null;
+    AccesoADatosCadeteria datosCadeteria = null;
+    AccesoADatosCadetes datosCadetes = null;
+    AccesoADatosPedidos datosPedidos = null;
     Cadeteria cadeteria = null;
     Informe informe = null;
 
     public CadeteriaController()
     {
-        datosCarga = new AccesoADatosJSON();
-        cadeteria = datosCarga.cargaDatos("cadeteria.json", "cadetes.json");
+        datosCadeteria = new AccesoADatosCadeteria();
+        datosCadetes = new AccesoADatosCadetes();
+        datosPedidos = new AccesoADatosPedidos();
+
+        cadeteria = datosCadeteria.obtener();
+        cadeteria.ListaCadetes = datosCadetes.obtener();
+        cadeteria.ListaPedidos = datosPedidos.obtener();
     }
 
 
-    [HttpGet("getPedidos")]
+    [HttpGet("pedidos")]
     public IActionResult GetPedidos()
     {
 
         return Ok(cadeteria.ListaPedidos);//le pide al acceso a datos los pedidos existentes
     }
 
-    [HttpGet("getCadeteria")]
-    public IActionResult GetCadeterias()
+    [HttpGet("cadeteria")]
+    public IActionResult GetCadeteria()
     {
         return Ok(cadeteria);
     }
 
-    [HttpGet("getInforme")]
+    [HttpGet("Informe")]
     public IActionResult GetInforme()
     {
         return Ok(informe);
@@ -53,20 +60,20 @@ public class CadeteriaController : ControllerBase
     public IActionResult asignarPedido(int idPedido, int idCadete)
     {
         string respuesta = cadeteria.asignarCadeteAlPedido(idCadete, idPedido);
-        return Ok(respuesta);
+        return Ok(respuesta); //not found
     }
 
     [HttpPut("putCambiarEstado")]
     public IActionResult cambiarEstadoPedido(int pedido, int nuevoEstado)
     {
         string resultado = cadeteria.cambiarEstadoPedido(pedido, nuevoEstado);
-        return Ok(resultado);
+        return Ok(resultado);//si no existe el pedido notfound("no existe el pedido")
     }
 
     [HttpPut("putAsignarNuevoCadete")]
     public IActionResult CambiarCadetePedido(int idPedido,int idNuevoCadete)
     {
         
-        return Ok(cadeteria.cambiarCadeteDePedido(idPedido, idNuevoCadete));
+        return Ok(cadeteria.cambiarCadeteDePedido(idPedido, idNuevoCadete)); //corregir
     }
 }
