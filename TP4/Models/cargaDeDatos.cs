@@ -18,8 +18,9 @@ public class AccesoADatosCadeteria
     };
     public Cadeteria obtener()
     {
-        string rutaCadeteria = File.ReadAllText("cadeteria.json");
-        cadeteria = JsonSerializer.Deserialize<Cadeteria>(rutaCadeteria, _opts);
+        if (!File.Exists("cadeteria.json")) return null;
+        string JSONCadeteria = File.ReadAllText("cadeteria.json");
+        cadeteria = JsonSerializer.Deserialize<Cadeteria>(JSONCadeteria, _opts);
 
         if (cadeteria == null)
         {
@@ -43,8 +44,9 @@ public class AccesoADatosCadetes
 
     public List<Cadete> obtener()
     {
-        string rutaCadetes = File.ReadAllText("cadetes.json");
-        cadetes = JsonSerializer.Deserialize<List<Cadete>>(rutaCadetes, _opts);
+        if (!File.Exists("cadetes.json")) return null;
+        string JSONCadetes = File.ReadAllText("cadetes.json");
+        cadetes = JsonSerializer.Deserialize<List<Cadete>>(JSONCadetes, _opts);
 
         if (cadetes == null)
         {
@@ -68,8 +70,9 @@ public class AccesoADatosPedidos
 
     public List<Pedidos> obtener()
     {
-        string rutaPedidos = File.ReadAllText("pedidos.json");
-        pedidos = JsonSerializer.Deserialize<List<Pedidos>>(rutaPedidos, _opts);
+        if (!File.Exists("pedidos.json")) return null;
+        string JSONPedidos = File.ReadAllText("pedidos.json");
+        pedidos = JsonSerializer.Deserialize<List<Pedidos>>(JSONPedidos, _opts);
 
         if (pedidos == null)
         {
@@ -77,6 +80,13 @@ public class AccesoADatosPedidos
         }
 
         return pedidos;
+
+    }
+
+    public void Guardar(List<Pedidos> Pedidos)
+    {
+        string JsonGuardar = JsonSerializer.Serialize(Pedidos, _opts);
+        File.WriteAllText("pedidos.json", JsonGuardar);
         
     }
 

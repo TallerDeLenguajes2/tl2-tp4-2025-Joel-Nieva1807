@@ -40,7 +40,7 @@ public class Cadeteria
 
         Pedidos encontrarPedido = ListaPedidos.FirstOrDefault(p => p.NumeroDePedido == numPedido);
 
-        if (encontrarPedido == null) return "No se encontro el pedido";
+        if (encontrarPedido == null) return "no encontrado";
 
 
 
@@ -49,7 +49,7 @@ public class Cadeteria
                                                                                     //es decir, busca al cadete cuyo Id coincida con el que ingreso el usuario
                                                                                     //(FirstOrDefault es un metodo link que devuelve el primer elemento de la lista que cumpla la condicion o null si no encuentra nada)
 
-        if (cadeteAsignado == null) return "No se encontro el cadete";
+        if (cadeteAsignado == null) return "invalido";
 
         encontrarPedido.Estado = EstadoPedido.Asignado;
         encontrarPedido.CadeteAsignado = cadeteAsignado;
@@ -114,6 +114,7 @@ public class Cadeteria
     public string cambiarEstadoPedido(int id, int opcionEstado)
     {
         Pedidos encontrarPedido = ListaPedidos.FirstOrDefault(p => p.NumeroDePedido == id);
+        if (encontrarPedido == null) return "no encontrado";
         switch (opcionEstado)
         {
             case 1:
@@ -132,8 +133,7 @@ public class Cadeteria
                 break;
 
             default:
-                Console.WriteLine("Error!");
-                break;
+                return "error!";
         }
 
         return $"El pedido {encontrarPedido.NumeroDePedido} se realizo un cambio a su estado a: {encontrarPedido.Estado}";
@@ -153,13 +153,13 @@ public class Cadeteria
                 }
                 else
                 {
-                    Console.WriteLine("Esta asignando el pedido al mismo cadete. Intente con otro Id.");
+                    return "ya asignado";
                 }
 
             }
 
         }
-
+        
         return resultado;
 
     }

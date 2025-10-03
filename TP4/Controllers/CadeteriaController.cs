@@ -32,48 +32,70 @@ public class CadeteriaController : ControllerBase
     [HttpGet("pedidos")]
     public IActionResult GetPedidos()
     {
+        if (cadeteria.ListaPedidos == null) return NoContent(); // 204, no hay pedidos cargados
 
-        return Ok(cadeteria.ListaPedidos);//le pide al acceso a datos los pedidos existentes
+        return Ok(cadeteria.ListaPedidos);//200, pedidos encontrados
     }
 
     [HttpGet("cadeteria")]
     public IActionResult GetCadeteria()
     {
-        return Ok(cadeteria);
+        if (cadeteria == null) return NotFound("No se encontro la cadeteria"); //404
+        return Ok(cadeteria); //200
     }
 
-    [HttpGet("Informe")]
+    [HttpGet("informe")]
     public IActionResult GetInforme()
     {
-        return Ok(informe);
+        if (informe == null) return NotFound("No hay informe generado"); //404
+        return Ok(informe); //200
 
     }
 
-    [HttpPost("postCrearPedido")]
+    [HttpPost("crearPedido")]
     public IActionResult crearPedido([FromBody] Pedidos nuevo)
     {
+
+        if (nuevo == null) return BadRequest("El pedido no puede ser nulo"); //404
         cadeteria.cargarPedido(nuevo);
-        return Ok(nuevo);
+        datosPedidos.Guardar(cadeteria.ListaPedidos);
+        return CreatedAtAction(nameof(GetPedidos), new { id = nuevo.NumeroDePedido }, nuevo);
     }
 
-    [HttpPut("putAsignarPedido")]
+    [HttpPut("asignarPedido")]
     public IActionResult asignarPedido(int idPedido, int idCadete)
     {
         string respuesta = cadeteria.asignarCadeteAlPedido(idCadete, idPedido);
-        return Ok(respuesta); //not found
+
+        if (respuesta.Contains("no encontrado", StringComparison.OrdinalIgnoreCase)) return NotFound(respuesta); // 404
+        if (respuesta.Contains("invalido", StringComparison.OrdinalIgnoreCase)) return BadRequest(respuesta); // 400
+
+        datosPedidos.Guardar(cadeteria.ListaPedidos);
+        return Ok(respuesta); //200
     }
 
-    [HttpPut("putCambiarEstado")]
+    [HttpPut("cambiarEstado")]
     public IActionResult cambiarEstadoPedido(int pedido, int nuevoEstado)
     {
         string resultado = cadeteria.cambiarEstadoPedido(pedido, nuevoEstado);
-        return Ok(resultado);//si no existe el pedido notfound("no existe el pedido")
+        if (resultado.Contains("no encontrado", StringComparison.OrdinalIgnoreCase)) return NotFound(resultado); // 404
+        if (resultado.Contains("estado invalido", StringComparison.OrdinalIgnoreCase)) return BadRequest(resultado); // 400
+
+        datosPedidos.Guardar(cadeteria.ListaPedidos);
+        return Ok(resultado);
     }
 
-    [HttpPut("putAsignarNuevoCadete")]
-    public IActionResult CambiarCadetePedido(int idPedido,int idNuevoCadete)
+    [HttpPut("asignarNuevoCadete")]
+    public IActionResult CambiarCadetePedido(int idPedido, int idNuevoCadete)
     {
-        
-        return Ok(cadeteria.cambiarCadeteDePedido(idPedido, idNuevoCadete)); //corregir
+        string resultado = cadeteria.cambiarCadeteDePedido(idPedido, idNuevoCadete);
+
+        if(resultado.Contains("no encontrado", StringComparison.OrdinalIgnoreCase)) return NotFound(resultado); // 404
+        if (resultado.Contains("estado invalido", StringComparison.OrdinalIgnoreCase)) return BadRequest(resultado); // 400
+        if (resultado.Contains("ya asignado", StringComparison.OrdinalIgnoreCase)) return BadRequest(resultado); // 400
+
+        datosPedidos.Guardar(cadeteria.ListaPedidos);
+
+        return Ok(resultado); //200
     }
 }
