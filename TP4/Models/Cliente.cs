@@ -9,12 +9,12 @@ public class Cliente
     public string datosReferenciaDireccion { get; set; }
 
     public Cliente() { } //constructor vacio para la serealizacion
-    public Cliente(string nombre, string direccion, int telefono, string datosReferenciaDireccion)
+    public Cliente(string Nombre, string Direccion, int Telefono, string DatosReferenciaDireccion)
     {
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.telefono = telefono;
-        this.datosReferenciaDireccion = datosReferenciaDireccion;
+        this.nombre = Nombre;
+        this.direccion = Direccion;
+        this.telefono = Telefono;
+        this.datosReferenciaDireccion = DatosReferenciaDireccion;
     }
 
     public string VerDatosDelCliente()

@@ -1,0 +1,35 @@
+[
+  {
+    "cliente": {
+      "nombre": "Juan Pérez",
+      "direccion": "Av. Siempre Viva 742",
+      "telefono": 3814567890,
+      "datosReferenciaDireccion": "Casa color verde con portón negro"
+    },
+    "NumeroDePedido": 1,
+    "Observaciones": "Entregar antes de las 13hs"
+    
+  },
+  {
+    "cliente": {
+      "nombre": "María Gómez",
+      "direccion": "Calle Mitre 234",
+      "telefono": 3814876543,
+      "datosReferenciaDireccion": "Departamento 3B"
+    },
+    "NumeroDePedido": 2,
+    "Observaciones": "Llamar antes de entregar"
+    
+  },
+  {
+    "cliente": {
+      "nombre": "Pedro Martínez",
+      "direccion": "Las Heras 1025",
+      "telefono": 3814212145,
+      "datosReferenciaDireccion": "Casa con rejas blancas"
+    },
+    "NumeroDePedido": 3,
+    "Observaciones": "Cliente paga en efectivo"
+    
+  }
+]

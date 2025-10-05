@@ -13,7 +13,7 @@ public enum EstadoPedido
 }
 public class Pedidos
 {
-    public Cliente cliente { get; }
+    public Cliente cliente { get; set; }
     public int NumeroDePedido { get; set; }
     public string Observaciones { get; set; }
 

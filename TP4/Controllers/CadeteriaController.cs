@@ -32,7 +32,7 @@ public class CadeteriaController : ControllerBase
     [HttpGet("pedidos")]
     public IActionResult GetPedidos()
     {
-        if (cadeteria.ListaPedidos == null) return NoContent(); // 204, no hay pedidos cargados
+        if (cadeteria.ListaPedidos == null) return NoContent(); // 204, no hay pedidos cargados, se devuelve cuando la petición fue exitosa pero no hay nada que devolver (lista vacia)
 
         return Ok(cadeteria.ListaPedidos);//200, pedidos encontrados
     }
@@ -40,7 +40,7 @@ public class CadeteriaController : ControllerBase
     [HttpGet("cadeteria")]
     public IActionResult GetCadeteria()
     {
-        if (cadeteria == null) return NotFound("No se encontro la cadeteria"); //404
+        if (cadeteria == null) return NotFound("No se encontro la cadeteria"); //404, se usa cuando el recurso solicitado (en este caso la cadetería) no existe en el servidor
         return Ok(cadeteria); //200
     }
 
@@ -56,10 +56,10 @@ public class CadeteriaController : ControllerBase
     public IActionResult crearPedido([FromBody] Pedidos nuevo)
     {
 
-        if (nuevo == null) return BadRequest("El pedido no puede ser nulo"); //404
+        if (nuevo == null) return BadRequest("El pedido no puede ser nulo"); //404, si el body es inválido o nulo — evita procesar datos inválidos
         cadeteria.cargarPedido(nuevo);
         datosPedidos.Guardar(cadeteria.ListaPedidos);
-        return CreatedAtAction(nameof(GetPedidos), new { id = nuevo.NumeroDePedido }, nuevo);
+        return Created($"/cadeteria/pedidos/{nuevo.NumeroDePedido}", nuevo);
     }
 
     [HttpPut("asignarPedido")]
@@ -68,10 +68,17 @@ public class CadeteriaController : ControllerBase
         string respuesta = cadeteria.asignarCadeteAlPedido(idCadete, idPedido);
 
         if (respuesta.Contains("no encontrado", StringComparison.OrdinalIgnoreCase)) return NotFound(respuesta); // 404
+        //StringComparison.OrdinalIgnoreCase evita problemas por mayúsculas/minúsculas cuando evaluás el mensaje.
         if (respuesta.Contains("invalido", StringComparison.OrdinalIgnoreCase)) return BadRequest(respuesta); // 400
 
         datosPedidos.Guardar(cadeteria.ListaPedidos);
         return Ok(respuesta); //200
+
+        /* NotFound(404) si no existe pedido o cadete.
+
+        BadRequest(400) si los parámetros están mal(por ejemplo id negativo).
+
+        Ok(200) si se asignó correctamente. */
     }
 
     [HttpPut("cambiarEstado")]
@@ -90,7 +97,7 @@ public class CadeteriaController : ControllerBase
     {
         string resultado = cadeteria.cambiarCadeteDePedido(idPedido, idNuevoCadete);
 
-        if(resultado.Contains("no encontrado", StringComparison.OrdinalIgnoreCase)) return NotFound(resultado); // 404
+        if (resultado.Contains("no encontrado", StringComparison.OrdinalIgnoreCase)) return NotFound(resultado); // 404
         if (resultado.Contains("estado invalido", StringComparison.OrdinalIgnoreCase)) return BadRequest(resultado); // 400
         if (resultado.Contains("ya asignado", StringComparison.OrdinalIgnoreCase)) return BadRequest(resultado); // 400
 

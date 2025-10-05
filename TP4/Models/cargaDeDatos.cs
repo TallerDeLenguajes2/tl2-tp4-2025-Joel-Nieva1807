@@ -18,8 +18,12 @@ public class AccesoADatosCadeteria
     };
     public Cadeteria obtener()
     {
-        if (!File.Exists("cadeteria.json")) return null;
-        string JSONCadeteria = File.ReadAllText("cadeteria.json");
+        string basePath = Directory.GetCurrentDirectory();
+        string rutaCadeteria = Path.Combine(basePath, "cadeteria.json");
+
+        if (!File.Exists(rutaCadeteria)) return null;
+        string JSONCadeteria = File.ReadAllText(rutaCadeteria);
+
         cadeteria = JsonSerializer.Deserialize<Cadeteria>(JSONCadeteria, _opts);
 
         if (cadeteria == null)
@@ -44,6 +48,7 @@ public class AccesoADatosCadetes
 
     public List<Cadete> obtener()
     {
+        
         if (!File.Exists("cadetes.json")) return null;
         string JSONCadetes = File.ReadAllText("cadetes.json");
         cadetes = JsonSerializer.Deserialize<List<Cadete>>(JSONCadetes, _opts);
